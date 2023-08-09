@@ -12,8 +12,8 @@ if __name__ == '__main__':
     # Creating the two players
     # To change their behaviour, change the second parameter
     # of the constructor with the desired agent program function
-    player_X = TicTacToePlayer('X', agent_program_minimax)
-    player_O = TicTacToePlayer('O', agent_program_random)
+    player_X = TicTacToePlayer('X', agent_program_minimax_alpha_beta)
+    player_O = TicTacToePlayer('O', agent_program_minimax_alpha_beta)
 
     # DO NOT EDIT THE FOLLOWING INSTRUCTIONS!
     environment = TicTacToeGameEnvironment()

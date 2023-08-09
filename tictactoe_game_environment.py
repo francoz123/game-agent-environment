@@ -9,8 +9,10 @@ class TicTacToeGameEnvironment(GameEnvironment):
 
     def __init__(self, board_size=3):
         super().__init__("Tic Tac Toe")
+
+        self.board_size = board_size
         self.game_state = {
-            'game-board': GridMap(3, 3, None),
+            'game-board': GridMap(board_size, board_size, None),
             'player-turn':'X'
         }
 
@@ -82,9 +84,9 @@ class TicTacToeGameEnvironment(GameEnvironment):
         if not action in TicTacToeGameEnvironment.get_legal_actions(game_state):
             raise(IllegalMove('Illegal move attempted'))
         tokens = action.split('-')
-        x, y = int(tokens[1]), int(tokens[2])
+        x, y = (int(tokens[1]), int(tokens[2]))
         board = game_state['game-board'].copy()
-        player = game_state['player-turn']
+        player = TicTacToeGameEnvironment.turn(game_state)
         board.set_item_value(x, y, player)
 
         return {
@@ -105,13 +107,12 @@ class TicTacToeGameEnvironment(GameEnvironment):
     def state_transition(self, agent_actuators):
         assert agent_actuators['marker'] is not None, "During a turn, the player must have set the 'marker' actuator value to a coordinate (x, y) of the game board where to place the marker."
         
+        x, y = agent_actuators['marker']
         gs = self.get_game_state()
-        position = agent_actuators['marker']
-        action =  'mark-{0}-{1}'.format(position[0], position[1])
+        action =  'mark-{0}-{1}'.format(x, y)
         new_gs = TicTacToeGameEnvironment.transition_result(gs, action)
-        self.game_state['game-board'] = new_gs['game-board']
+        self.game_state['game-board'] = new_gs['game-board'].copy()
         self.game_state['player-turn'] = new_gs['player-turn']
-
     
     # This method is a static method (i.e. we do not have access to self
     # and it can only be accessed via the class TicTacToeGameEnvironment)
